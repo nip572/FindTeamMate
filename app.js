@@ -33,6 +33,12 @@ TeamApp.service('Service' , ['$http', function($http) {
 TeamApp.controller('loginController' ,['$scope', 'Service', function($scope , Service) {
 
     $scope.test = "I am login";
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+    });
 
 }]);
 
