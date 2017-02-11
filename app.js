@@ -30,8 +30,7 @@ var auth = $firebaseAuth();
 
 
 //controllers
-
-TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth', function($scope , $window,Auth) {
+TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth','$location', function($scope , $window,Auth,$location) {
 
     $scope.test = "I am login";
     var authCtrl = this;
@@ -39,18 +38,22 @@ TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth', function($scope , $w
    $scope.password = "";
 
 
-    $scope.login = function () {
+   $scope.go = function (path) {
 
+       $location.path(path);
+   };
+
+    $scope.login = function () {
         console.log("In Login Method");
         Auth.$signInWithEmailAndPassword($scope.email , $scope.password).then(function (auth) {
             console.log("Logged in successfully");
-            $window.location.href = 'pages/home.htm';
+            //$window.location.href = 'pages/home.htm';
+            $scope.go("/bhbdhs");
 
         }, function (error) {
                 console.log("Error Occured" + error.message);
             });
     };
-
 
     $scope.createUser = function () {
         console.log("In create Method");
@@ -61,11 +64,9 @@ TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth', function($scope , $w
             console.log("Error Occured" + error.message);
         });
     };
-
-
 }]);
 
-TeamApp.controller('homeController' ,['$scope', 'Service', '$route', '$routeParams', function($scope , Service , $route, $routeParams) {
+TeamApp.controller('homeController' ,['$scope', '$route', '$routeParams', function($scope , $route, $routeParams) {
 
     $scope.test = "I am Home ";
     $scope.param = $routeParams.id;
