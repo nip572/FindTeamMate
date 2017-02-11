@@ -9,7 +9,7 @@ TeamApp.config(function ($routeProvider , $locationProvider) {
     $routeProvider
     .when('/', {
       templateUrl:'pages/login.html',
-      controller:'loginController'
+      controller:'AuthCtrl'
     })
     .when('/:id', {
       templateUrl:'pages/home.htm',
@@ -23,22 +23,45 @@ TeamApp.config(function ($routeProvider , $locationProvider) {
 });
 
 //services
-TeamApp.service('Service' , ['$http', function($http) {
-
-}]);
+TeamApp.factory('Auth' , function($firebaseAuth) {
+var auth = $firebaseAuth();
+    return auth;
+});
 
 
 //controllers
 
-TeamApp.controller('loginController' ,['$scope', 'Service', function($scope , Service) {
+TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth', function($scope , $window,Auth) {
 
     $scope.test = "I am login";
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-    });
+    var authCtrl = this;
+   $scope.email = "";
+   $scope.password = "";
+
+
+    $scope.login = function () {
+
+        console.log("In Login Method");
+        Auth.$signInWithEmailAndPassword($scope.email , $scope.password).then(function (auth) {
+            console.log("Logged in successfully");
+            $window.location.href = 'pages/home.htm';
+
+        }, function (error) {
+                console.log("Error Occured" + error.message);
+            });
+    };
+
+
+    $scope.createUser = function () {
+        console.log("In create Method");
+        Auth.$createUserWithEmailAndPassword($scope.email , $scope.password).then(function (auth) {
+            console.log("User Created Successfully");
+            $scope.login();
+        }, function (error) {
+            console.log("Error Occured" + error.message);
+        });
+    };
+
 
 }]);
 
@@ -52,15 +75,14 @@ TeamApp.controller('homeController' ,['$scope', 'Service', '$route', '$routePara
 }]);
 
 
-TeamApp.controller('listController' ,['$scope', '$http','Service','$route', '$routeParams','$firebaseObject' ,
-    function($scope , $http, Service, $route, $routeParams , $firebaseObject) {
+TeamApp.controller('listController' ,['$scope', '$http','Service','$route', '$routeParams' ,
+    function($scope , $http, Service, $route, $routeParams ) {
 
     $scope.test = "I am List";
     $scope.param = $routeParams.id;
     console.log($scope.param);
 
-    var ref = firebase.database().ref();
-    $scope.name = $firebaseObject(ref);
+
 
 
 }]);

@@ -25,11 +25,11 @@
                         </div>
                     </div>
                     <div class="form-bottom">
-                        <form role="form" action="" method="post" class="login-form">
+                        <form role="form"  class="login-form">
                             <div class="form-group">
                                 <label class="sr-only" for="form-username">Username</label>
                                 <input type="text" name="form-username" placeholder="Username..." class="form-username form-control"
-                                       id="form-username" ng-model = "username">
+                                       id="form-username" ng-model = "email">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
@@ -37,7 +37,14 @@
                                        ng-model = "password"
                                 >
                             </div>
-                            <button type="submit" class="btn">Sign in!</button>
+                            <div>
+                            <button class="btn" ng-click = "login()" >Sign in!</button>
+                            </div>
+
+                        </br>
+
+                            <button class="btn btn-primary" ng-click = "createUser()" style="background-color:#2b669a"> Create Account</button>
+
                         </form>
                     </div>
                 </div>
@@ -60,5 +67,4 @@
             </div>
         </div>
     </div>
-
 </div>
