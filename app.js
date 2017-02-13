@@ -30,25 +30,49 @@ var auth = $firebaseAuth();
 
 
 //controllers
-TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth','$location', function($scope , $window,Auth,$location) {
+TeamApp.controller('AuthCtrl' ,['$rootScope','$scope', '$window','Auth','$location' ,'$firebaseArray' , '$firebaseObject',
+    function($rootScope,$scope , $window,Auth, $location , $firebaseArray , $firebaseObject) {
 
     $scope.test = "I am login";
     var authCtrl = this;
-   $scope.email = "";
-   $scope.password = "";
+    $scope.email = "";
+    $scope.password = "";
 
-
+// HELPER FUNCTION TO NAVIGATE TO PATH
    $scope.go = function (path) {
-
        $location.path(path);
+   };
+
+   $scope.user = function () {
+       console.log("in Auth Changed");
+       Auth.$onAuthStateChanged( function (user) {
+           if(user){
+               console.log("Logged in as: " + user.uid);
+               $scope.uid = user.uid;
+               $scope.go("/"+$scope.uid);
+               $rootScope.userRef = firebase.database().ref();
+               console.log($rootScope.userRef+"   uder ref");
+               $rootScope.userObject = $firebaseObject($rootScope.userRef.child(user.uid));
+               if($rootScope.userObject === null){
+                   console.log("userRef is Null");
+               }
+               else{
+                   console.log("rootscope "+$rootScope.userObject.$values);
+               }
+
+
+               //make database model
+
+           }
+       });
    };
 
     $scope.login = function () {
         console.log("In Login Method");
         Auth.$signInWithEmailAndPassword($scope.email , $scope.password).then(function (auth) {
             console.log("Logged in successfully");
+            $scope.user();
             //$window.location.href = 'pages/home.htm';
-            $scope.go("/bhbdhs");
 
         }, function (error) {
                 console.log("Error Occured" + error.message);
@@ -66,7 +90,7 @@ TeamApp.controller('AuthCtrl' ,['$scope', '$window','Auth','$location', function
     };
 }]);
 
-TeamApp.controller('homeController' ,['$scope', '$route', '$routeParams', function($scope , $route, $routeParams) {
+TeamApp.controller('homeController' ,['$scope', '$route', '$routeParams' , function($scope , $route, $routeParams) {
 
     $scope.test = "I am Home ";
     $scope.param = $routeParams.id;
