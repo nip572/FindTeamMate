@@ -43,12 +43,14 @@
 
                         </br>
 
-                            <button class="btn btn-primary" ng-click = "createUser()" style="background-color:#2b669a"> Create Account</button>
+                            <button class="btn btn-primary"  style="background-color:#2b669a"  data-toggle="modal" data-target="#myModal"> Create Account</button>
 
                         </form>
                     </div>
                 </div>
             </div>
+
+
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3 social-login">
                     <h3>...or login with:</h3>
@@ -66,5 +68,40 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Enter Details</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="text" placeholder="Name" class="form-username form-control">
+                        </br>
+
+                        <input type="text" placeholder="Skills" class="form-username form-control">
+                        </br>
+
+                        <button class="btn btn-primary"  > Add Skill</button>
+
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #c9302c">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-</div>
+</di
