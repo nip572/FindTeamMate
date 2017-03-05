@@ -28,6 +28,23 @@ var auth = $firebaseAuth();
     return auth;
 });
 
+TeamApp.factory('Ref' , function ($firebaseArray , $firebaseObject) {
+
+    var usersRef = firebase.database().ref('');
+    var users = $firebaseArray(usersRef);
+    var Users = {
+        getProfile: function(uid){
+            return $firebaseObject(usersRef.child(uid));
+        },
+        getDisplayName: function(uid){
+            return users.$getRecord(uid).displayName;
+        },
+        all: users
+    };
+
+
+
+});
 
 //controllers
 TeamApp.controller('AuthCtrl' ,['$rootScope','$scope', '$window','Auth','$location' ,'$firebaseArray' , '$firebaseObject',
@@ -47,17 +64,20 @@ TeamApp.controller('AuthCtrl' ,['$rootScope','$scope', '$window','Auth','$locati
        console.log("in Auth Changed");
        Auth.$onAuthStateChanged( function (user) {
 
+           if(user === null){
+               $scope.go("/");
+
+           }
+
+           else {
                console.log("Logged in as: " + user.uid);
                $scope.uid = user.uid;
-               $scope.go("/"+$scope.uid);
+               $scope.go("/" + $scope.uid);
                const dbRef = firebase.database().ref();
                const userRef = dbRef.child(user.uid);
-               $scope.object = $firebaseObject(userRef) ;
+               $scope.object = $firebaseObject(userRef);
                console.log($scope.object);
-
-               //make database model
-
-
+           }
        });
    };
 
@@ -75,19 +95,10 @@ TeamApp.controller('AuthCtrl' ,['$rootScope','$scope', '$window','Auth','$locati
     };
 
     $scope.createUser = function () {
-
-       $scope.user.uid = {
-           "email":"",
-           "name":"",
-           //COMPLETE THIS HOOK IT UPTO MODEL IN MODAL. CREATE USER IS DISCONNECTED 
-
-       }
         console.log("In create Method");
         Auth.$createUserWithEmailAndPassword($scope.email , $scope.password).then(function (auth) {
             console.log("User Created Successfully");
             //OPEN FORM AND ADD SKILL
-
-
 
             $scope.login();
         }, function (error) {
@@ -96,13 +107,15 @@ TeamApp.controller('AuthCtrl' ,['$rootScope','$scope', '$window','Auth','$locati
     };
 }]);
 
-TeamApp.controller('homeController' ,['$scope', '$route', '$routeParams' , function($scope , $route, $routeParams) {
+TeamApp.controller('homeController' ,['$scope', 'Auth','$route', '$routeParams' , '$location' , function($scope , Auth ,$route, $routeParams, $location) {
 
     $scope.test = "I am Home ";
     $scope.param = $routeParams.id;
     console.log($scope.param);
+    $scope.signOut = function () {
+        Auth.$signOut();
 
-
+    }
 }]);
 
 
